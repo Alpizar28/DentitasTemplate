@@ -1,0 +1,32 @@
+{
+    "version": "1.0.0",
+    "business": {
+        "timezone": "UTC",
+        "currency": "USD"
+    },
+    "featureFlags": {
+        "booking.policies.lead_time.enabled": true,
+        "booking.policies.max_advance.enabled": true,
+        "booking.confirmation.manual.enabled": false,
+        "booking.admin.block.enabled": true
+    },
+    "policies": {
+        "LeadTimePolicy": {
+            "minMinutes": 60
+        },
+        "MaxAdvanceBookingPolicy": {
+            "maxMinutes": 43200
+        }
+    },
+    "schedule": {
+        "default": {
+            "mon_fri": [
+                "09:00-18:00"
+            ]
+        }
+    },
+    "meta": {
+        "source": "FILE",
+        "description": "Base configuration for booking system. Safe defaults for all policies."
+    }
+}
