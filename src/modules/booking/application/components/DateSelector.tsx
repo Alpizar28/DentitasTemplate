@@ -58,9 +58,18 @@ export function DateSelector() {
                         mode="single"
                         required={false}
                         selected={selectedDate || undefined}
-                        onSelect={(date) => selectDate(date || null)}
+                        onSelect={(date) => {
+                            console.log("📅 Date clicked:", date);
+                            selectDate(date || null);
+                        }}
                         className="rounded-md border-0"
-                        disabled={(date) => date < new Date()}
+                        disabled={(date) => {
+                            // Fix: Ensure we only disable YESTERDAY and before.
+                            // Normalize "today" to 00:00:00 to avoid blocking the current day.
+                            const today = new Date();
+                            today.setHours(0, 0, 0, 0);
+                            return date < today;
+                        }}
                     // TODO: Disable non-working days from config
                     />
                 </div>
@@ -79,15 +88,17 @@ export function DateSelector() {
                         <div className="border rounded-xl p-6 bg-neutral-50 min-h-[300px]">
 
                             {loading ? (
-                                <div className="flex h-full items-center justify-center text-neutral-400">
-                                    <Loader2 className="w-8 h-8 animate-spin" />
+                                <div className="grid grid-cols-3 gap-3">
+                                    {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => (
+                                        <div key={i} className="h-10 bg-neutral-200 rounded-lg animate-pulse" />
+                                    ))}
                                 </div>
                             ) : slots.length === 0 ? (
                                 <div className="flex h-full items-center justify-center text-neutral-400">
                                     No hay horarios disponibles.
                                 </div>
                             ) : (
-                                <div className="grid grid-cols-3 gap-3">
+                                <div className="grid grid-cols-3 gap-3 animate-in fade-in duration-300">
                                     {slots.map((slot) => {
                                         const timeLabel = format(new Date(slot.start), 'HH:mm')
                                         const isSelected = selectedTime === timeLabel
@@ -97,7 +108,7 @@ export function DateSelector() {
                                                 key={slot.start}
                                                 onClick={() => selectTime(timeLabel)}
                                                 className={`
-                                 py-2 px-4 rounded-lg text-sm font-medium transition-all
+                                 py-2 px-4 rounded-lg text-sm font-medium transition-all active:scale-95
                                  ${isSelected
                                                         ? "bg-neutral-900 text-white shadow-md transform scale-105"
                                                         : "bg-white border border-neutral-200 hover:border-neutral-400 text-neutral-700 hover:shadow-sm"

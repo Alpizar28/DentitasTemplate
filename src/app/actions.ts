@@ -32,11 +32,18 @@ function getServices() {
 
 // --- ACTIONS ---
 
+// Imports needed for TZ handling
+import { toZonedTime, fromZonedTime } from 'date-fns-tz';
+
 export async function getAvailabilityAction(resourceId: string, dateIso: string) {
     const { bookingRepo, configService } = getServices();
-    await configService.load(); // Override defaults with DB/Env
+    await configService.load();
 
-    const configSettings = await configService.getPolicyParams<any>('SERVICE_DEFAULT'); // Try load service config
+    const configSettings = await configService.getPolicyParams<any>('SERVICE_DEFAULT');
+    const scheduleSettings = await configService.getPolicyParams<any>('SCHEDULE_DEFAULT');
+
+    // Default Timezone from Config or Fallback
+    const timeZone = scheduleSettings?.timezone || 'America/Panama';
 
     // M2: Use Smart Engine
     const smartService = new SmartAvailabilityService(bookingRepo, configService);
@@ -50,31 +57,23 @@ export async function getAvailabilityAction(resourceId: string, dateIso: string)
     };
 
     try {
-        const date = new Date(dateIso);
-        // Range: Full Day 00:00 - 23:59 (Engine will filter by Schedule)
-        // Fix: Use UTC-aware date parsing if dateIso implies UTC, or careful timezone handling.
-        // For now, assume dateIso "YYYY-MM-DD" creates a Date at 00:00 UTC.
-        // But setHours operates in Local Time of the server unless using setUTCHours.
+        // CORRECT TIMEZONE LOGIC:
+        // We want the full 24h of the requested 'dateIso' (YYYY-MM-DD) AS PER the Business Timezone.
+        // 1. Construct string "YYYY-MM-DD 00:00"
+        const startStr = `${dateIso} 00:00`;
+        const endStr = `${dateIso} 23:59:59`;
 
-        // Better approach for full day range:
-        // Use the start of the day in the configured Timezone?
-        // Or simply cover 00:00 to 23:59 of the given date string interpreted as local date.
+        // 2. Convert to Absolute UTC Date objects using the Timezone
+        const start = fromZonedTime(startStr, timeZone);
+        const end = fromZonedTime(endStr, timeZone);
 
-        // Let's create dates explicitely from the string components to avoid TZ shifts
-        const [year, month, day] = dateIso.split('-').map(Number);
-        const start = new Date(year, month - 1, day, 0, 0, 0, 0);
-        const end = new Date(year, month - 1, day, 23, 59, 59, 999);
-
-        console.log(`[getAvailabilityAction] Request for ${resourceId} on ${dateIso}`);
-        console.log(`[getAvailabilityAction] Range: ${start.toISOString()} - ${end.toISOString()}`);
-        console.log(`[getAvailabilityAction] ServiceConfig:`, JSON.stringify(serviceConfig));
+        console.log(`[getAvailabilityAction] Request for ${dateIso} in ${timeZone}`);
+        console.log(`[getAvailabilityAction] Query Range (UTC): ${start.toISOString()} - ${end.toISOString()}`);
 
         const slots = await smartService.getSlots(resourceId, start, end, serviceConfig);
-        console.log(`[getAvailabilityAction] Found ${slots.length} slots`);
         return { success: true, data: slots };
     } catch (error: any) {
         console.error('[getAvailabilityAction] FATAL ERROR:', error);
-        if (error instanceof Error) console.error(error.stack);
         return { success: false, error: error.message };
     }
 }

@@ -31,20 +31,23 @@ export class SmartAvailabilityService {
         end: Date,
         serviceConfig: ServiceConfig
     ): Promise<TimeSlot[]> {
-        // 1. Load Schedule Config
-        // In real impl, this comes from ConfigService key 'SCHEDULE:<resourceId>' or default
-        const schedule = await this.loadSchedule(resourceId);
+        // Parallel Fetch: Schedule & Existing Bookings
+        // This significantly reduces latency by avoiding sequential DB waterfalls.
+        const [schedule, busyRanges] = await Promise.all([
+            this.loadSchedule(resourceId),
+            this.getBusyRanges(resourceId, start, end)
+        ]);
+
         const timeZone = schedule.timezone || 'UTC';
 
         // 2. Generate Base Availability (Shifts - Exceptions)
-        // Ranges here are in UTC but derived from configured TimeZone
         const effectiveRanges = this.generateEffectiveRanges(start, end, schedule, timeZone);
 
         // 3. Subtract Breaks (Global Breaks)
         const rangeAfterBreaks = this.subtractBreaks(effectiveRanges, schedule, timeZone);
 
         // 4. Subtract Occupied Time (Bookings)
-        const busyRanges = await this.getBusyRanges(resourceId, start, end);
+        // busyRanges is already fetched
         const netRanges = this.subtractBusyRanges(rangeAfterBreaks, busyRanges);
 
         // 5. Generate Slots from Net Ranges

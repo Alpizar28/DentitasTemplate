@@ -13,7 +13,18 @@ export class ConfigService implements IConfigService {
         private environment: string
     ) { }
 
+    private static cache: { data: BookingConfig | null, expires: number } = { data: null, expires: 0 };
+
     async load(): Promise<void> {
+        // CACHE STRATEGY: 60 Seconds TTL
+        // Prevent DB hammer on config (which rarely changes)
+        if (ConfigService.cache.data && Date.now() < ConfigService.cache.expires) {
+            this.currentConfig = ConfigService.cache.data;
+            this.isLoaded = true;
+            console.log('[ConfigService] Using cached configuration');
+            return;
+        }
+
         try {
             // 1. Start with Defaults
             let finalConfig: BookingConfig = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
@@ -41,6 +52,13 @@ export class ConfigService implements IConfigService {
 
             this.currentConfig = finalConfig;
             this.isLoaded = true;
+
+            // UPDATE CACHE
+            ConfigService.cache = {
+                data: finalConfig,
+                expires: Date.now() + 60000 // 60s
+            };
+
             console.log(`[ConfigService] Configuration loaded for ${this.environment}. Source: ${dbConfig ? 'DB+File' : 'File Only'}`);
         } catch (error) {
             console.error('[ConfigService] Failed to load configuration. Aborting start.', error);
