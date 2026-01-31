@@ -145,19 +145,39 @@ const Navbar = ({ branding, sections, isMobileMenuOpen, toggleMenu }: NavbarProp
                 </button>
 
                 {isMobileMenuOpen && (
-                    <div className="fixed inset-0 bg-white z-40 flex flex-col pt-32 px-6 animate-in slide-in-from-top-10 duration-300">
-                        <div className="flex flex-col gap-8 text-2xl font-bold text-neutral-900">
-                            {about && <a href="#about" onClick={toggleMenu} className="border-b border-neutral-100 pb-4">Nosotros</a>}
-                            {team && <a href="#team" onClick={toggleMenu} className="border-b border-neutral-100 pb-4">Equipo</a>}
-                            {features && <a href="#features" onClick={toggleMenu} className="border-b border-neutral-100 pb-4">Servicios</a>}
-                            {gallery && <a href="#gallery" onClick={toggleMenu} className="border-b border-neutral-100 pb-4">Resultados</a>}
-                            {testimonials && <a href="#testimonials" onClick={toggleMenu} className="border-b border-neutral-100 pb-4">Testimonios</a>}
-                            {faq && <a href="#faq" onClick={toggleMenu} className="border-b border-neutral-100 pb-4">FAQ</a>}
-                            <Link href="/book" onClick={toggleMenu}>
-                                <Button size="lg" className="w-full rounded-full py-6 text-lg shadow-xl shadow-blue-500/20 bg-blue-600 hover:bg-blue-700 text-white border-0 mt-4">
-                                    Reservar Cita
-                                </Button>
-                            </Link>
+                    <div
+                        className="fixed inset-0 top-0 left-0 w-screen h-screen z-[9999] flex flex-col p-6 bg-white"
+                        style={{ backgroundColor: '#ffffff', opacity: 1, position: 'fixed', top: 0, left: 0 }}
+                    >
+                        {/* Mobile Header with Close Button */}
+                        <div className="flex items-center justify-between mb-12">
+                            <div className="font-bold text-2xl tracking-tighter flex items-center gap-3 text-neutral-900">
+                                <div className="w-10 h-10 bg-neutral-900 rounded-full flex items-center justify-center text-white">
+                                    <Smile className="w-6 h-6" />
+                                </div>
+                                {branding.name}
+                            </div>
+                            <button onClick={toggleMenu} className="p-2 -mr-2 text-neutral-900 bg-neutral-100 rounded-full hover:bg-neutral-200">
+                                <X className="w-8 h-8" />
+                            </button>
+                        </div>
+
+                        {/* Menu Links */}
+                        <div className="flex flex-col gap-6 text-2xl font-bold text-neutral-900">
+                            {about && <a href="#about" onClick={toggleMenu} className="border-b-2 border-transparent hover:border-blue-500 w-fit pb-1">Nosotros</a>}
+                            {team && <a href="#team" onClick={toggleMenu} className="border-b-2 border-transparent hover:border-blue-500 w-fit pb-1">Equipo</a>}
+                            {features && <a href="#features" onClick={toggleMenu} className="border-b-2 border-transparent hover:border-blue-500 w-fit pb-1">Servicios</a>}
+                            {gallery && <a href="#gallery" onClick={toggleMenu} className="border-b-2 border-transparent hover:border-blue-500 w-fit pb-1">Resultados</a>}
+                            {testimonials && <a href="#testimonials" onClick={toggleMenu} className="border-b-2 border-transparent hover:border-blue-500 w-fit pb-1">Testimonios</a>}
+                            {faq && <a href="#faq" onClick={toggleMenu} className="border-b-2 border-transparent hover:border-blue-500 w-fit pb-1">FAQ</a>}
+
+                            <div className="pt-8 w-full">
+                                <Link href="/book" onClick={toggleMenu} className="block w-full">
+                                    <Button size="lg" className="w-full rounded-full py-6 text-lg font-bold shadow-xl shadow-blue-500/20 bg-blue-600 hover:bg-blue-700 text-white border-0">
+                                        Reservar Cita
+                                    </Button>
+                                </Link>
+                            </div>
                         </div>
                     </div>
                 )}
@@ -466,6 +486,7 @@ const Footer = ({ branding, contact }: FooterProps) => (
             <div className="flex gap-8 mt-4 md:mt-0">
                 <a href="#" className="hover:text-white transition-colors">Privacidad</a>
                 <a href="#" className="hover:text-white transition-colors">Términos</a>
+                <Link href="/admin/login" className="hover:text-white transition-colors">Gestión</Link>
             </div>
         </div>
     </footer>

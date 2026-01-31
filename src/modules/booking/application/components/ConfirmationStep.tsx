@@ -10,6 +10,7 @@ import { format } from "date-fns"
 import { es } from "date-fns/locale"
 import { toPng } from "html-to-image"
 import { CheckCircle2, Calendar, Clock, User, AlertCircle, Loader2, Download } from "lucide-react"
+import Link from "next/link"
 
 export function ConfirmationStep() {
     const { serviceId, selectedDate, selectedTime, patientDetails, setStep, reset } = useBookingStore()
@@ -130,9 +131,11 @@ export function ConfirmationStep() {
                         <Download className="w-4 h-4 mr-2" />
                         Descargar Comprobante
                     </Button>
-                    <Button onClick={reset} variant="ghost">
-                        Volver al Inicio
-                    </Button>
+                    <Link href="/" className="w-full">
+                        <Button onClick={reset} variant="ghost" className="w-full">
+                            Volver al Inicio
+                        </Button>
+                    </Link>
                 </div>
             </motion.div>
         )

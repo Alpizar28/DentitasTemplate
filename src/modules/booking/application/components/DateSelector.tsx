@@ -51,9 +51,9 @@ export function DateSelector() {
             className="grid md:grid-cols-2 gap-8"
         >
             {/* Col 1: Calendar */}
-            <div className="flex flex-col space-y-4">
-                <h2 className="text-xl font-semibold tracking-tight">Selecciona la fecha</h2>
-                <div className="border rounded-xl p-4 bg-white shadow-sm self-start">
+            <div className="flex flex-col space-y-4 w-full items-center md:items-start">
+                <h2 className="text-xl font-semibold tracking-tight self-start md:self-auto">Selecciona la fecha</h2>
+                <div className="border rounded-xl p-4 bg-white shadow-sm w-fit max-w-full overflow-hidden">
                     <Calendar
                         mode="single"
                         required={false}
@@ -82,13 +82,13 @@ export function DateSelector() {
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0 }}
-                        className="flex flex-col space-y-4"
+                        className="flex flex-col space-y-4 w-full"
                     >
                         <h2 className="text-xl font-semibold tracking-tight">Horarios Disponibles</h2>
-                        <div className="border rounded-xl p-6 bg-neutral-50 min-h-[300px]">
+                        <div className="border rounded-xl p-4 md:p-6 bg-neutral-50 min-h-[300px]">
 
                             {loading ? (
-                                <div className="grid grid-cols-3 gap-3">
+                                <div className="grid grid-cols-3 gap-2 md:gap-3">
                                     {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => (
                                         <div key={i} className="h-10 bg-neutral-200 rounded-lg animate-pulse" />
                                     ))}
@@ -98,7 +98,7 @@ export function DateSelector() {
                                     No hay horarios disponibles.
                                 </div>
                             ) : (
-                                <div className="grid grid-cols-3 gap-3 animate-in fade-in duration-300">
+                                <div className="grid grid-cols-3 gap-2 md:gap-3 animate-in fade-in duration-300">
                                     {slots.map((slot) => {
                                         const timeLabel = format(new Date(slot.start), 'HH:mm')
                                         const isSelected = selectedTime === timeLabel
