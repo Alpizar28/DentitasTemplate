@@ -1,7 +1,7 @@
 {
     "version": "1.0.0",
     "business": {
-        "timezone": "UTC",
+        "timezone": "America/Panama",
         "currency": "USD"
     },
     "featureFlags": {
@@ -16,13 +16,194 @@
         },
         "MaxAdvanceBookingPolicy": {
             "maxMinutes": 43200
+        },
+        "SCHEDULE_DEFAULT": {
+            "timezone": "America/Panama",
+            "weeklyShifts": [
+                {
+                    "days": [
+                        "MON",
+                        "TUE",
+                        "WED",
+                        "THU",
+                        "FRI"
+                    ],
+                    "start": "09:00",
+                    "end": "18:00"
+                }
+            ],
+            "globalBreaks": [
+                {
+                    "days": [
+                        "MON",
+                        "TUE",
+                        "WED",
+                        "THU",
+                        "FRI"
+                    ],
+                    "start": "15:00",
+                    "end": "16:00",
+                    "label": "Lunch"
+                }
+            ],
+            "exceptions": []
+        },
+        "SERVICE_DEFAULT": {
+            "durationMinutes": 60,
+            "granularityMinutes": 60,
+            "bufferAfterMinutes": 0
         }
     },
-    "schedule": {
-        "default": {
-            "mon_fri": [
-                "09:00-18:00"
+    "LANDING_PAGE": {
+        "sections": {
+            "hero": true,
+            "about": true,
+            "features": true,
+            "testimonials": true,
+            "faq": true,
+            "contact": true,
+            "team": true,
+            "gallery": true
+        },
+        "branding": {
+            "name": "Dentistas Template",
+            "logoUrl": "/logo-placeholder.png",
+            "colors": {
+                "primary": "#000000",
+                "secondary": "#2563EB",
+                "accent": "#F59E0B",
+                "background": "#FFFFFF"
+            }
+        },
+        "hero": {
+            "title": "Sonrisas que Cambian Vidas",
+            "subtitle": "Odontología integral y moderna para ti y tu familia. Agenda tu cita en segundos.",
+            "ctaText": "Reservar Cita",
+            "ctaLink": "/book",
+            "backgroundImage": "https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&q=80&w=2068"
+        },
+        "gallery": {
+            "title": "Nuestros Resultados",
+            "subtitle": "Transformaciones reales que hablan por sí solas.",
+            "images": [
+                "https://images.unsplash.com/photo-1606811841689-23dfddce3e95?auto=format&fit=crop&q=80&w=800",
+                "https://images.unsplash.com/photo-1598256989800-fe5f95da9787?auto=format&fit=crop&q=80&w=800",
+                "https://images.unsplash.com/photo-1609840114035-3c981b782dfe?auto=format&fit=crop&q=80&w=800",
+                "https://images.unsplash.com/photo-1616391182219-e080b4d1043a?auto=format&fit=crop&q=80&w=800",
+                "https://images.unsplash.com/photo-1588776814546-1ffcf4722e12?auto=format&fit=crop&q=80&w=800",
+                "https://images.unsplash.com/photo-1571772996211-2f02c9727629?auto=format&fit=crop&q=80&w=800"
             ]
+        },
+        "team": {
+            "title": "Conoce a los Expertos",
+            "members": [
+                {
+                    "name": "Dra. Ana López",
+                    "role": "Ortodoncista Lead",
+                    "image": "https://images.unsplash.com/photo-1594824476967-48c8b964273f?auto=format&fit=crop&q=80&w=800"
+                },
+                {
+                    "name": "Dr. Carlos Ruiz",
+                    "role": "Cirujano Oral",
+                    "image": "https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=800"
+                },
+                {
+                    "name": "Dra. Sofia Mendez",
+                    "role": "Estética Dental",
+                    "image": "https://images.unsplash.com/photo-1559839734-2b71ea86b48e?auto=format&fit=crop&q=80&w=800"
+                }
+            ]
+        },
+        "features": [
+            {
+                "id": "f1",
+                "title": "Tecnología Avanzada",
+                "description": "Equipos de última generación para diagnósticos precisos.",
+                "icon": "Microscope"
+            },
+            {
+                "id": "f2",
+                "title": "Atención Personalizada",
+                "description": "Te escuchamos y diseñamos el tratamiento ideal para ti.",
+                "icon": "Heart"
+            },
+            {
+                "id": "f3",
+                "title": "Sin Dolor",
+                "description": "Técnicas modernas para una experiencia relajada y cómoda.",
+                "icon": "Smile"
+            },
+            {
+                "id": "f4",
+                "title": "Estética Total",
+                "description": "Diseño de sonrisa digital y carillas de alta precisión.",
+                "icon": "Star"
+            },
+            {
+                "id": "f5",
+                "title": "Implantes",
+                "description": "Recupera tu funcionalidad completa con materiales premium.",
+                "icon": "Microscope"
+            }
+        ],
+        "aboutUs": {
+            "title": "Conoce al Dr. Default",
+            "subtitle": "Excelencia Clínica y Calidez Humana",
+            "description": "Con más de 15 años de experiencia transformando sonrisas, el Dr. Default combina arte y ciencia para lograr resultados naturales. Nuestra filosofía se basa en tratamientos mínimamente invasivos y una atención detallada a cada paciente.",
+            "stats": [
+                {
+                    "label": "Años de Exp.",
+                    "value": "15+"
+                },
+                {
+                    "label": "Pacientes",
+                    "value": "2k+"
+                },
+                {
+                    "label": "Certificaciones",
+                    "value": "12"
+                }
+            ],
+            "imageUrl": "https://images.unsplash.com/photo-1559839734-2b71ea86b48e?auto=format&fit=crop&q=80&w=1000"
+        },
+        "testimonials": [
+            {
+                "id": "t1",
+                "name": "María González",
+                "role": "Paciente Ortodoncia",
+                "text": "Increíble atención. Mi sonrisa quedó perfecta y el proceso fue muy rápido."
+            },
+            {
+                "id": "t2",
+                "name": "Carlos Pérez",
+                "role": "Paciente Implantes",
+                "text": "Tenía miedo al dentista, pero aquí me hicieron sentir muy seguro. Recomendados al 100%."
+            }
+        ],
+        "faq": [
+            {
+                "question": "¿Aceptan seguros médicos?",
+                "answer": "Sí, trabajamos con la mayoría de las aseguradoras principales. Contáctanos para verificar tu cobertura específica."
+            },
+            {
+                "question": "¿Cuál es el costo de la primera consulta?",
+                "answer": "La consulta de evaluación inicial tiene un costo de $50, que se abona a tu tratamiento si decides iniciarlo con nosotros."
+            },
+            {
+                "question": "¿Atienden urgencias dentales?",
+                "answer": "Por supuesto. Tenemos espacios reservados diariamente para urgencias. Llámanos inmediatamente si tienes dolor."
+            },
+            {
+                "question": "¿Ofrecen planes de pago?",
+                "answer": "Sí, ofrecemos financiamiento directo y planes de pago flexibles para tratamientos de ortodoncia e implantes."
+            }
+        ],
+        "contact": {
+            "address": "Torre Global, Piso 20, Consultorio 204, Ciudad de Panamá",
+            "phone": "+507 6000-0000",
+            "email": "contacto@dentistastemplate.com",
+            "instagram": "@dentistas_template",
+            "whatsapp": "https://wa.me/50760000000"
         }
     },
     "meta": {

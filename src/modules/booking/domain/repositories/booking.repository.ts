@@ -48,4 +48,9 @@ export interface IBookingRepository {
      * Retorna null si no existe.
      */
     findById(bookingId: string): Promise<Booking | null>;
+    /**
+     * Recupera todas las reservas activas (HELD, CONFIRMED) que se solapan con el periodo dado.
+     * Optimizado para Availability Engine.
+     */
+    findActiveBookings(resourceId: string, period: TimeRange): Promise<Booking[]>;
 }

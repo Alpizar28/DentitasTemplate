@@ -1,84 +1,91 @@
-# BellBooking — Professional Booking System Template
+# BellBooking Template 📅
 
-![Version](https://img.shields.io/badge/version-1.0.0-blue) ![Status](https://img.shields.io/badge/status-ready_to_clone-green) ![License](https://img.shields.io/badge/license-MIT-lightgrey)
+> **Professional Booking System Core for Next.js + Supabase**
 
-**BellBooking** is an open-core, architecture-first booking system template designed for scalability and maintainability. It follows **Domain-Driven Design (DDD)** and **Hexagonal Architecture** principles, separating the immutable core from custom business logic and UI.
+Este repositorio es una **plantilla de arquitectura empresarial** ("Template") diseñada para acelerar el desarrollo de sistemas de reservas y citas de alta complejidad (Citas médicas, coworking, alquileres, etc.).
 
-## 🚀 Features
+No es solo un "boilerplate" de UI; incluye un núcleo de reservas robusto (DDD + Hexagonal) pre-construido.
 
-*   **Immutable Core (M1)**: Robust scheduling engine handling time zones, exclusions, and finite state machines.
-*   **Extensible Policies (M2)**: Rule engine for validating bookings (LeadTime, MaxAdvance, etc.) without modifying the core.
-*   **Dynamic Configuration (M3)**: JSON-based configuration with database overrides and fail-fast validation.
-*   **Reusable UI Core (M6)**: A headless, policy-driven UI kit for building wizard-like booking flows.
-*   **Template Scaffolding (M4)**: Scripts and structure to spin up new client projects in < 15 minutes.
-*   **Operational Excellence (M5)**: Audit logging, performance patterns, and security hardening out of the box.
+---
 
-## 📂 Project Structure
+## 🚀 Módulos Incluidos
 
-```
-src/
-├── modules/
-│   ├── booking/       # 🔒 CORE DOMAIN (Do not touch)
-│   └── custom/        # ✅ CUSTOM EXTENSIONS (Your logic here)
-├── ui-core/           # 🔒 UI COMPONENTS (Reusable, vertical-agnostic)
-├── ui-verticals/      # ✅ VERTICAL EXAMPLES (Dentist, Sports, etc.)
-└── ui-client/         # ✅ CLIENT BRANDING (Themes, Copy)
-seeds/                 # 🌱 Configuration seeds
-docs/                  # 📚 Documentation
-```
+El sistema se divide en módulos arquitectónicos robustos:
 
-## 🛠️ Getting Started
+*   **Módulo 1: Booking Core (Transactional)** 🛡️
+    *   Gestión de estados (Held, Confirmed, Cancelled).
+    *   Concurrencia pesimista (Row Locking & Exclusion Constraints).
+    *   Arquitectura Hexagonal pura.
+    *   [Ver Diseño (Core)](src/modules/booking/CORE_CONTRACT.md)
 
-### Prerequisites
+*   **Módulo 2: Availability Engine (Smart)** 🧠
+    *   Cálculo determinístico de slots.
+    *   Timezone-aware (Soporte multi-zona).
+    *   Config-driven (Shifts, Breaks, Exceptions dinámicos).
+    *   [Ver Diseño (Availability)](src/modules/booking/M2_AVAILABILITY_DESIGN.md)
 
-*   Node.js >= 18
-*   Supabase CLI
-*   NPM
+*   **Módulo 3: Configuration System** ⚙️
+    *   Sistema de configuración por capas (File -> DB -> Env).
+    *   Feature Flags nativos.
+    *   Seed script idempotente.
+    *   [Ver Diseño (Config)](src/modules/booking/M3_CONFIG_DESIGN.md)
 
-### 1. Clone & Bootstrap
+---
 
+## 🛠️ Tecnologías
+
+*   **Frontend:** Next.js 16 (App Router), Tailwind CSS v4, React 19.
+*   **Backend:** Server Actions (Next.js), Supabase (PostgreSQL + Auth).
+*   **Testing:** Vitest (Integration & Unit).
+*   **Utils:** date-fns, zod (validation).
+
+---
+
+## 🏁 Quick Start (Para nuevos proyectos)
+
+### 1. Requisitos
+*   Node.js 18+
+*   Docker (para Supabase Local) o Proyecto Supabase Cloud.
+
+### 2. Instalación
 ```bash
-# Clone the template
-git clone https://github.com/your-org/bellbooking-template.git my-project
-cd my-project
-
-# Remove git history to start fresh
-rm -rf .git
-git init
+# Instalar dependencias
+npm install
 ```
 
-### 2. Configure Environment
-
+### 3. Configuración de Entorno
+Copia el ejemplo y configura tus credenciales de Supabase:
 ```bash
 cp .env.example .env.development
-# Update SUPABASE_URL and SUPABASE_ANON_KEY in .env.development
+# Editar .env.development con:
+# NEXT_PUBLIC_SUPABASE_URL=...
+# NEXT_PUBLIC_SUPABASE_ANON_KEY=...
+# SUPABASE_SERVICE_ROLE_KEY=... (Para seeds/admin tasks)
 ```
 
-### 3. Install & Seed
-
+### 4. Base de Datos & Seeds
+Aplica las migraciones y carga la configuración inicial:
 ```bash
-npm install
-npx supabase db push  # Apply migrations
-npm run seed:config   # Load base configuration
+# Aplicar esquema DB
+npm run db:push
+
+# Sembrar configuración (Shifts, Policies)
+npm run seed:config:dev
 ```
 
-### 4. Run Locally
-
+### 5. Iniciar Desarrollo
 ```bash
 npm run dev
 ```
+Visita `http://localhost:3000/playground/availability` para probar el motor.
 
-Visit `http://localhost:3000` (or configured port).
+---
 
-## 📘 Documentation
+## 🧪 Testing
 
-*   [Architecture Overview](docs/ARCHITECTURE.md)
-*   [Configuration Guide](docs/CONFIG.md)
-*   [Customization Guide](docs/CUSTOMIZATION.md)
-*   [Security Hardening](docs/SECURITY.md)
-*   [Operations & Audit](docs/OPERATIONS.md)
-*   [UI Core System](docs/UI_CORE.md)
+Este template viene con una suite de tests de integración para garantizar que el núcleo no se rompa al extenderlo.
 
-## ⚖️ License
-
-MIT. See `LICENSE` for details.
+```bash
+# Correr todos los tests
+npm run test:watch
+```

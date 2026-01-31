@@ -1,0 +1,36 @@
+name: BellBooking CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Use Node.js 20
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    # Create dummy env file for tests if needed (Vitest mocks config, so strictly not needed for logic, but good practice)
+    - name: Create .env
+      run: |
+        touch .env.development
+        echo "NEXT_PUBLIC_SUPABASE_URL=https://example.supabase.co" >> .env.development
+        echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=example-key" >> .env.development
+
+    - name: Run Tests
+      # We just want to run unit tests for logic. Integration tests might fail if no real DB is present in CI.
+      # For now, we run 'vitest run' which picks up our spec files.
+      # Ideally, split unit vs integration.
+      run: npx vitest run

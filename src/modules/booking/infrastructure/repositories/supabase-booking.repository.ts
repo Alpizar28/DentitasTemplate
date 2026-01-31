@@ -135,4 +135,21 @@ export class SupabaseBookingRepository implements IBookingRepository {
 
         return BookingMapper.toDomain(data);
     }
+
+    async findActiveBookings(resourceId: string, period: TimeRange): Promise<Booking[]> {
+        // Query overlapping HELD/CONFIRMED bookings, ensuring HELD are not expired.
+        const { data, error } = await this.client
+            .from('bookings')
+            .select('*')
+            .eq('resource_id', resourceId)
+            .overlaps('period', period.toString())
+            .in('status', [BookingStatus.HELD, BookingStatus.CONFIRMED])
+            // "Active" defined as: CONFIRMED OR (HELD AND hold_expires > now)
+            .or(`status.eq.${BookingStatus.CONFIRMED},and(status.eq.${BookingStatus.HELD},hold_expires_at.gt.now())`);
+
+        if (error) throw new DomainError(error.message);
+        if (!data) return [];
+
+        return data.map(row => BookingMapper.toDomain(row));
+    }
 }

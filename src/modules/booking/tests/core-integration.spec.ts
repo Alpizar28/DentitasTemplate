@@ -8,7 +8,7 @@ import { OverlapError } from '../domain/errors/booking.errors';
 import { BookingStatus } from '../domain/value-objects/booking-status.vo';
 
 // Load envs
-dotenv.config({ path: '.env.local' }); // Or .env.test. Using local for now as user likely has it setup
+dotenv.config({ path: process.env.DOTENV_CONFIG_PATH || '.env.local' }); // Or .env.test. Using local for now as user likely has it setup
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;

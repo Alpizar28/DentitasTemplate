@@ -4,15 +4,49 @@
   "description": "BellBooking — Professional Booking System Template (Backend + UI Core)",
   "main": "index.js",
   "dependencies": {
-    "@supabase/supabase-js": "^2.93.3"
+    "@hookform/resolvers": "^5.2.2",
+    "@radix-ui/react-checkbox": "^1.3.3",
+    "@radix-ui/react-slot": "^1.2.4",
+    "@supabase/supabase-js": "^2.93.3",
+    "@tailwindcss/postcss": "^4.1.18",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
+    "date-fns-tz": "^3.2.0",
+    "framer-motion": "^12.29.2",
+    "html-to-image": "^1.11.13",
+    "html2canvas": "^1.4.1",
+    "lucide-react": "^0.563.0",
+    "next": "^16.1.6",
+    "react": "^19.2.4",
+    "react-day-picker": "^9.13.0",
+    "react-dom": "^19.2.4",
+    "react-hook-form": "^7.71.1",
+    "tailwind-merge": "^3.4.0",
+    "zod": "^4.3.6",
+    "zustand": "^5.0.10"
   },
   "devDependencies": {
+    "@types/react": "19.2.10",
+    "autoprefixer": "^10.4.23",
+    "cross-env": "^10.1.0",
     "dotenv": "^17.2.3",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.18",
+    "tsx": "^4.21.0",
     "vitest": "^4.0.18"
   },
   "scripts": {
-    "test:integration": "vitest run src/modules/booking/tests/core-integration.spec.ts",
+    "test:integration": "cross-env DOTENV_CONFIG_PATH=.env.development vitest run src/modules/booking/tests/core-integration.spec.ts",
     "test:config": "vitest run src/modules/booking/tests/config.service.spec.ts src/modules/booking/tests/policy.registry.spec.ts",
-    "seed:config": "node -r dotenv/config dist/modules/booking/infrastructure/configuration/config-seed.script.js"
+    "db:push": "supabase db push",
+    "infra:health": "cross-env DOTENV_CONFIG_PATH=.env.development tsx -r dotenv/config src/modules/booking/infrastructure/bootstrap/run-health-check.ts",
+    "seed:config:dev": "cross-env DOTENV_CONFIG_PATH=.env.development tsx -r dotenv/config src/modules/booking/infrastructure/configuration/config-seed.script.ts",
+    "seed:config:test": "cross-env DOTENV_CONFIG_PATH=.env.test tsx -r dotenv/config src/modules/booking/infrastructure/configuration/config-seed.script.ts",
+    "seed:config:prod": "cross-env DOTENV_CONFIG_PATH=.env.production tsx -r dotenv/config src/modules/booking/infrastructure/configuration/config-seed.script.ts",
+    "dev": "next dev",
+    "test:watch": "cross-env DOTENV_CONFIG_PATH=.env.development vitest",
+    "setup:dev": "npm run db:push && npm run seed:config:dev",
+    "setup:test": "npm run db:push && npm run seed:config:test"
   }
 }

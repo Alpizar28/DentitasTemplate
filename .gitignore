@@ -23,3 +23,11 @@ yarn-error.log*
 
 # Supabase
 supabase/.temp/
+
+# Next.js
+.next/
+out/
+build/
+dist/
+.vercel
+*.log

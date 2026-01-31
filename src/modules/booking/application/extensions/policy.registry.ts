@@ -26,20 +26,29 @@ export class PolicyRegistry {
      */
     async getActivePolicies(): Promise<IPolicy[]> {
         const policies: IPolicy[] = [];
+        const isProduction = process.env.NODE_ENV === 'production';
 
-        // 1. Lead Time Policy (M3: Config-Driven)
+        // 1. Lead Time Policy
         if (await this.configService.isEnabled(BookingFlags.POLICIES.LEAD_TIME_ENABLED)) {
             const params = this.configService.getPolicyParams<{ minMinutes: number }>('LeadTimePolicy');
-            const minMinutes = params?.minMinutes ?? 60; // Safe default if config missing
 
+            if (isProduction && (params?.minMinutes === undefined)) {
+                throw new Error('[PolicyRegistry] CRITICAL: Missing configuration for LeadTimePolicy in PRODUCTION. Defaults are forbidden.');
+            }
+
+            const minMinutes = params?.minMinutes ?? 60; // Default allowed only in non-prod
             policies.push(new LeadTimePolicy(minMinutes));
         }
 
-        // 2. Max Advance Policy (M3: Config-Driven)
+        // 2. Max Advance Policy
         if (await this.configService.isEnabled(BookingFlags.POLICIES.MAX_ADVANCE_ENABLED)) {
             const params = this.configService.getPolicyParams<{ maxMinutes: number }>('MaxAdvanceBookingPolicy');
-            const maxMinutes = params?.maxMinutes ?? (30 * 24 * 60); // 30 days default
 
+            if (isProduction && (params?.maxMinutes === undefined)) {
+                throw new Error('[PolicyRegistry] CRITICAL: Missing configuration for MaxAdvanceBookingPolicy in PRODUCTION. Defaults are forbidden.');
+            }
+
+            const maxMinutes = params?.maxMinutes ?? (30 * 24 * 60); // 30 days default
             policies.push(new MaxAdvanceBookingPolicy(maxMinutes));
         }
 
